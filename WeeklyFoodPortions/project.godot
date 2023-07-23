@@ -1,0 +1,32 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="WeeklyFoodsPortions"
+config/description="Keep track of weekly foods portions. Portions can be divide in Fruit, Vegetagle, Rise and Legumes, Pasta, Fish and similar, Meat group or custom groups. "
+run/main_scene="res://scenes/Main.tscn"
+config/features=PackedStringArray("4.1", "Mobile")
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[dotnet]
+
+project/assembly_name="Desktop"
+
+[rendering]
+
+renderer/rendering_method="mobile"

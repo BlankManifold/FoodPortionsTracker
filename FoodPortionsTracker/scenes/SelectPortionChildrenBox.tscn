@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddhrd35ifa0yj"]
+
+[ext_resource type="Script" path="res://scripts/SelectPortionChildrenBox.cs" id="1_bo455"]
+
+[node name="SelectPortionChildernBox" type="VBoxContainer"]
+script = ExtResource("1_bo455")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(0, 150)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Select child portion types"
+horizontal_alignment = 1
+
+[node name="ChildrenCheckBoxesContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Confirm changes"
+
+[node name="EscButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Discharge changes"
+
+[connection signal="button_down" from="HBoxContainer/ConfirmButton" to="." method="_on_confirm_button_button_down"]
+[connection signal="button_down" from="HBoxContainer/EscButton" to="." method="_on_esc_button_button_down"]

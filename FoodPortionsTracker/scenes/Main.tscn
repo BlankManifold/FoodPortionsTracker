@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://7vrirh8jjl5"]
+
+[ext_resource type="PackedScene" uid="uid://dddafasecl6tu" path="res://scenes/PortionsList.tscn" id="1_ddype"]
+[ext_resource type="Script" path="res://scripts/Main.cs" id="1_v4nr4"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_v4nr4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="MainLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 36
+text = "Food Portions Tracker"
+horizontal_alignment = 1
+
+[node name="PortionsList" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_ddype")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]

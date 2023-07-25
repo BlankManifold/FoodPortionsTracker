@@ -1,0 +1,97 @@
+[gd_scene load_steps=2 format=3 uid="uid://dddafasecl6tu"]
+
+[ext_resource type="Script" path="res://scripts/PortionsList.cs" id="1_ivxfj"]
+
+[node name="PortionsList" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ivxfj")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="PortionsContainer" type="VBoxContainer" parent="ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 30
+
+[node name="AddPortionButton" type="Button" parent="ScrollContainer/PortionsContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add a portion"
+
+[node name="PopupWindow" type="Window" parent="."]
+unique_name_in_owner = true
+title = "Add a portion type"
+initial_position = 1
+size = Vector2i(308, 117)
+visible = false
+wrap_controls = true
+unresizable = true
+always_on_top = true
+popup_window = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PopupWindow"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 308.0
+offset_bottom = 117.0
+theme_override_constants/separation = 10
+
+[node name="NameBox" type="HBoxContainer" parent="PopupWindow/VBoxContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="PopupWindow/VBoxContainer/NameBox"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Name: "
+
+[node name="NameLineEdit" type="LineEdit" parent="PopupWindow/VBoxContainer/NameBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+placeholder_text = "name of portion"
+
+[node name="TargetValue" type="HBoxContainer" parent="PopupWindow/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TargetValueLabel" type="Label" parent="PopupWindow/VBoxContainer/TargetValue"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+text = "Target value:"
+
+[node name="TargetValueSpinBox" type="SpinBox" parent="PopupWindow/VBoxContainer/TargetValue"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+max_value = 0.0
+rounded = true
+allow_greater = true
+alignment = 1
+update_on_text_changed = true
+
+[node name="AddButton" type="Button" parent="PopupWindow/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Add"
+
+[connection signal="button_down" from="ScrollContainer/PortionsContainer/AddPortionButton" to="." method="_on_add_portion_button_button_down"]
+[connection signal="close_requested" from="PopupWindow" to="." method="_on_popup_window_close_requested"]
+[connection signal="button_down" from="PopupWindow/VBoxContainer/AddButton" to="." method="_on_add_button_button_down"]

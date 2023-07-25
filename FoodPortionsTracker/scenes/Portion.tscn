@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://sjb8vfaidkmq"]
+
+[ext_resource type="Script" path="res://scripts/Portion.cs" id="1_h7dmx"]
+[ext_resource type="PackedScene" uid="uid://ddhrd35ifa0yj" path="res://scenes/SelectPortionChildrenBox.tscn" id="2_iyop0"]
+
+[node name="Portion" type="VBoxContainer"]
+offset_right = 375.0
+offset_bottom = 61.0
+script = ExtResource("1_h7dmx")
+
+[node name="NameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Nome"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MinusButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "MINUS"
+
+[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+step = 1.0
+rounded = true
+show_percentage = false
+
+[node name="ProgressBarLabel" type="Label" parent="HBoxContainer/ProgressBar"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "0/10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PlusButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "PLUS"
+
+[node name="SettingsButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "O"
+
+[node name="SelectPortionChildrenBox" parent="." instance=ExtResource("2_iyop0")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+
+[connection signal="button_down" from="HBoxContainer/MinusButton" to="." method="_on_minus_button_button_down"]
+[connection signal="button_down" from="HBoxContainer/PlusButton" to="." method="_on_plus_button_button_down"]
+[connection signal="toggled" from="HBoxContainer/SettingsButton" to="." method="_on_settings_button_toggled"]
+[connection signal="ConfirmedChanges" from="SelectPortionChildrenBox" to="." method="_on_select_portion_children_box_confirmed_changes"]

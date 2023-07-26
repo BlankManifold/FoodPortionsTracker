@@ -5,12 +5,14 @@ using System.Collections.Generic;
 
 public partial class SelectPortionChildrenBox : VBoxContainer
 {
-    private VBoxContainer _childrenCheckBoxesContainer;
+    private GridContainer _childrenCheckBoxesContainer;
     private Godot.Collections.Dictionary<string, CheckBox> _checkBoxesDict = new Godot.Collections.Dictionary<string, CheckBox>();
     private Godot.Collections.Dictionary<string, bool> _initialCheckBoxesNameDict = new Godot.Collections.Dictionary<string, bool>();
 
     [Signal]
     public delegate void ConfirmedChangesEventHandler(Godot.Collections.Array<string> checkedChildren);
+    [Signal]
+    public delegate void DeletePortionEventHandler();
     public void Init(Godot.Collections.Array<string> portionTypes)
     {
         foreach (string type in portionTypes)
@@ -24,7 +26,7 @@ public partial class SelectPortionChildrenBox : VBoxContainer
     }
     public override void _Ready()
     {
-        _childrenCheckBoxesContainer = GetNode<VBoxContainer>("%ChildrenCheckBoxesContainer");
+        _childrenCheckBoxesContainer = GetNode<GridContainer>("%ChildrenCheckBoxesContainer");
 
         Init(Globals.SetsData.AllTypes);
 
@@ -32,22 +34,29 @@ public partial class SelectPortionChildrenBox : VBoxContainer
             _childrenCheckBoxesContainer.AddChild(checkBox);
     }
 
-    public void Disable(string name)
+    public void Disable(string name, bool disable = true)
     {
-        _checkBoxesDict[name].Disabled = true;
+        _checkBoxesDict[name].Disabled = disable;
+        _checkBoxesDict[name].ButtonPressed = false;
     }
     public void Clear()
     {
         foreach (CheckBox checkBox in _checkBoxesDict.Values)
             checkBox.ButtonPressed = false;
     }
-    public void UpdateCheckBoxes(Godot.Collections.Array<string> portionsTypes)
+    public void UpdateCheckBoxes(
+        Godot.Collections.Array<string> lowerTypes, 
+        Godot.Collections.Array<string> upperTypes
+    )
     {
-        foreach (string type in portionsTypes)
+        foreach (string type in lowerTypes)
         {
             _checkBoxesDict[type].ButtonPressed = true;
             _initialCheckBoxesNameDict[type] = true;
         }
+        
+        foreach (string type in upperTypes)
+            Disable(type);
     }
     private void _UpdateInitialDict()
     {
@@ -98,5 +107,10 @@ public partial class SelectPortionChildrenBox : VBoxContainer
     {
         Visible = false;
         Reset();
+    }
+    public void _on_delete_button_button_down()
+    {
+        Visible = false;
+        EmitSignal(SignalName.DeletePortion);
     }
 }

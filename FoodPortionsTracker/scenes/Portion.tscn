@@ -66,3 +66,4 @@ layout_mode = 2
 [connection signal="button_down" from="HBoxContainer/PlusButton" to="." method="_on_plus_button_button_down"]
 [connection signal="toggled" from="HBoxContainer/SettingsButton" to="." method="_on_settings_button_toggled"]
 [connection signal="ConfirmedChanges" from="SelectPortionChildrenBox" to="." method="_on_select_portion_children_box_confirmed_changes"]
+[connection signal="DeletePortion" from="SelectPortionChildrenBox" to="." method="_on_select_portion_children_box_delete_portion"]

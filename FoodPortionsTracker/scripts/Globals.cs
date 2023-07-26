@@ -23,6 +23,11 @@ namespace Globals
             PortionsDict.Add(type, portion);
             AllTypes.Add(type);
         }
+        public static void RemovePortion(string type)
+        {
+            PortionsDict.Remove(type);
+            AllTypes.Remove(type);
+        }
     }
 
 

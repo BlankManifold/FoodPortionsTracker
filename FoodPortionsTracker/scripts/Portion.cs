@@ -7,12 +7,15 @@ public partial class Portion : VBoxContainer
     private ProgressBar _progressBar;
     private Label _progressBarLabel;
     private Label _nameLabel;
-    private SelectPortionChildrenBox _selectPortionChildrenBox;
+    private PortionOptionsBox _portionOptionsBox;
     private PortionRes _info = null;
     public PortionRes Info
     {
         get { return _info; }
     }
+
+    [Signal]
+    public delegate void MoveButtonChangedEventHandler(Portion portion, bool down);
 
     public void Init(PortionRes info)
     {
@@ -32,15 +35,15 @@ public partial class Portion : VBoxContainer
         _progressBar = GetNode<ProgressBar>("%ProgressBar");
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
         _nameLabel = GetNode<Label>("%NameLabel");
-        _selectPortionChildrenBox = GetNode<SelectPortionChildrenBox>("%SelectPortionChildrenBox");
+        _portionOptionsBox = GetNode<PortionOptionsBox>("%PortionOptionsBox");
 
         if (_info == null)
             _info = new PortionRes();
 
         _nameLabel.Text = _info.PortionName;
         _InitProgressBar(_info);
-        _selectPortionChildrenBox.UpdateCheckBoxes(_info.LowerPortions, _info.UpperPortions);
-        _selectPortionChildrenBox.Disable(_info.PortionName);
+        _portionOptionsBox.UpdateCheckBoxes(_info.LowerPortions, _info.UpperPortions);
+        _portionOptionsBox.Disable(_info.PortionName);
     }
 
 
@@ -84,17 +87,17 @@ public partial class Portion : VBoxContainer
     }
     public void AddSelectionCheckBox(string type)
     {
-        _selectPortionChildrenBox.AddCheckBox(type);
+        _portionOptionsBox.AddCheckBox(type);
         if (type == _info.PortionName)
-            _selectPortionChildrenBox.Disable(_info.PortionName);
+            _portionOptionsBox.Disable(_info.PortionName);
     }
     public void RemoveSelectionCheckBox(string type)
     {
-        _selectPortionChildrenBox.RemoveCheckBox(type);
+        _portionOptionsBox.RemoveCheckBox(type);
     }
     public void DisableSelectionCheckBox(string type, bool disable)
     {
-        _selectPortionChildrenBox.Disable(type, disable);
+        _portionOptionsBox.Disable(type, disable);
     }
     public void AddValueToProgressBar(int delta)
     {
@@ -130,7 +133,7 @@ public partial class Portion : VBoxContainer
     }
     public void _on_settings_button_toggled(bool pressed)
     {
-        _selectPortionChildrenBox.Visible = pressed;
+        _portionOptionsBox.Visible = pressed;
     }
     public void _on_select_portion_children_box_confirmed_changes(Godot.Collections.Array<string> checkedChildren)
     {
@@ -170,5 +173,12 @@ public partial class Portion : VBoxContainer
         );
         Globals.SetsData.RemovePortion(_info.PortionName);
         QueueFree();
+    }
+
+    public void _on_move_button_button_down(){
+        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, true});
+    }
+    public void _on_move_button_button_up(){
+        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, false});
     }
 }

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://sjb8vfaidkmq"]
 
 [ext_resource type="Script" path="res://scripts/Portion.cs" id="1_h7dmx"]
-[ext_resource type="PackedScene" uid="uid://ddhrd35ifa0yj" path="res://scenes/SelectPortionChildrenBox.tscn" id="2_iyop0"]
+[ext_resource type="PackedScene" uid="uid://ddhrd35ifa0yj" path="res://scenes/PortionOptionsBox.tscn" id="2_iyop0"]
 
 [node name="Portion" type="VBoxContainer"]
 offset_right = 375.0
@@ -16,6 +16,10 @@ text = "Nome"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+
+[node name="MoveButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = " = "
 
 [node name="MinusButton" type="Button" parent="HBoxContainer"]
 layout_mode = 2
@@ -57,13 +61,15 @@ layout_mode = 2
 toggle_mode = true
 text = "O"
 
-[node name="SelectPortionChildrenBox" parent="." instance=ExtResource("2_iyop0")]
+[node name="PortionOptionsBox" parent="." instance=ExtResource("2_iyop0")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[connection signal="button_down" from="HBoxContainer/MoveButton" to="." method="_on_move_button_button_down"]
+[connection signal="button_up" from="HBoxContainer/MoveButton" to="." method="_on_move_button_button_up"]
 [connection signal="button_down" from="HBoxContainer/MinusButton" to="." method="_on_minus_button_button_down"]
 [connection signal="button_down" from="HBoxContainer/PlusButton" to="." method="_on_plus_button_button_down"]
 [connection signal="toggled" from="HBoxContainer/SettingsButton" to="." method="_on_settings_button_toggled"]
-[connection signal="ConfirmedChanges" from="SelectPortionChildrenBox" to="." method="_on_select_portion_children_box_confirmed_changes"]
-[connection signal="DeletePortion" from="SelectPortionChildrenBox" to="." method="_on_select_portion_children_box_delete_portion"]
+[connection signal="ConfirmedChanges" from="PortionOptionsBox" to="." method="_on_select_portion_children_box_confirmed_changes"]
+[connection signal="DeletePortion" from="PortionOptionsBox" to="." method="_on_select_portion_children_box_delete_portion"]

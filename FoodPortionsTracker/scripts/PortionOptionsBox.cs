@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 
-public partial class SelectPortionChildrenBox : VBoxContainer
+public partial class PortionOptionsBox : VBoxContainer
 {
     private GridContainer _childrenCheckBoxesContainer;
     private Godot.Collections.Dictionary<string, CheckBox> _checkBoxesDict = new Godot.Collections.Dictionary<string, CheckBox>();

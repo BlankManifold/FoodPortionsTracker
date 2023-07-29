@@ -91,10 +91,10 @@ public partial class PortionsList : Control
 
         portion.MoveButtonChanged += OnPortionMoveButtonChanged;
         portion.Init(portionRes);
+        Globals.SetsData.AddPortion(portionRes.PortionName, portion);
+
         _portionsContainer.AddChild(portion);
         _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
-
-        Globals.SetsData.AddPortion(portionRes.PortionName, portion);
         GetTree().CallGroup(
             "portions",
 			Portion.MethodName.AddSelectionCheckBox,

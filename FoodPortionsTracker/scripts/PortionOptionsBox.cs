@@ -84,6 +84,9 @@ public partial class PortionOptionsBox : VBoxContainer
     }
     public void AddCheckBox(string type)
     {
+        if (_checkBoxesDict.ContainsKey(type))
+            return;
+            
         CheckBox checkBox = new CheckBox();
         checkBox.ButtonPressed = false;
         checkBox.Text = type;

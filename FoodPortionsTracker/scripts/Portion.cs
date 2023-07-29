@@ -22,13 +22,6 @@ public partial class Portion : MarginContainer
     {
         _info = info;
     }
-    private void _InitProgressBar(PortionRes info)
-    {
-        _progressBar.MinValue = info.MinValue;
-        _progressBar.MaxValue = info.MaxValue;
-        _progressBar.Value = info.Value;
-        _UpdateProgressBarLabel(info.Value);
-    }
     public override void _Ready()
     {
         AddToGroup("portions");
@@ -50,6 +43,13 @@ public partial class Portion : MarginContainer
     }
 
 
+    private void _InitProgressBar(PortionRes info)
+    {
+        _progressBar.MinValue = info.MinValue;
+        _progressBar.MaxValue = info.MaxValue;
+        _progressBar.Value = info.Value;
+        _UpdateProgressBarLabel(info.Value);
+    }
     private void _UpdateProgressBarLabel(int value)
     {
         _progressBarLabel.Text = $"{value}/{_info.MaxValue}";
@@ -161,7 +161,7 @@ public partial class Portion : MarginContainer
             }
         }
     }
-    public void _on_select_portion_children_box_delete_portion()
+    public void _on_portion_options_box_delete_portion()
     {
         foreach (string type in _info.UpperPortions)
         {
@@ -177,16 +177,16 @@ public partial class Portion : MarginContainer
         Globals.SetsData.RemovePortion(_info.PortionName);
         QueueFree();
     }
-
+    public void _on_portion_options_box_color_changed(Color color)
+    {
+        _colorRect.Color = color;
+        _info.PortionColor = color;
+    }
     public void _on_move_button_button_down(){
         EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, true});
     }
     public void _on_move_button_button_up(){
         EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, false});
     }
-    public void _on_portion_options_box_color_changed(Color color)
-    {
-        _colorRect.Color = color;
-        _info.PortionColor = color;
-    }
+    
 }

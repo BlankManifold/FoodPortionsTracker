@@ -7,7 +7,7 @@ public partial class PortionsList : Control
     private LineEdit _popupNameLineEdit;
     private SpinBox _popupTargetValueSpinBox;
     private VBoxContainer _portionsContainer;
-    private Button _addPortionButton;
+    private HBoxContainer _listButtonsContainer;
 
     private struct MovingPortionInfo
     {
@@ -29,7 +29,6 @@ public partial class PortionsList : Control
 
     }
     private MovingPortionInfo _movingPortionInfo = new MovingPortionInfo();
-    private bool _movingPortionFlag = false;
 
     public override void _Ready()
     {
@@ -37,38 +36,32 @@ public partial class PortionsList : Control
         _popupNameLineEdit = GetNode<LineEdit>("%NameLineEdit");
         _popupTargetValueSpinBox = GetNode<SpinBox>("%TargetValueSpinBox");
         _portionsContainer = GetNode<VBoxContainer>("%PortionsContainer");
-        _addPortionButton = GetNode<Button>("%AddPortionButton");
+        _listButtonsContainer = GetNode<HBoxContainer>("%ListButtonsContainer");
+
+        SetPhysicsProcess(false);
     }
     public override void _PhysicsProcess(double delta)
-    {
-        if (!_movingPortionFlag)
-            return;
-        
-        _movingPortionInfo.PortionToBeMoved.GlobalPosition = new Vector2(
-             _movingPortionInfo.PortionToBeMoved.GlobalPosition.X, 
-             GetGlobalMousePosition().Y - _movingPortionInfo.YShift
-             );   
+    {   
+        float newY = GetGlobalMousePosition().Y - _movingPortionInfo.YShift;
+        _movingPortionInfo.PortionToBeMoved.GlobalPosition = new Vector2(_movingPortionInfo.PortionToBeMoved.GlobalPosition.X,newY);   
 
-        if (_checkPortionMovedUp(_movingPortionInfo.PortionToBeMoved))
+        if (_CheckPortionMovedUp(_movingPortionInfo.PortionToBeMoved))
         {
             int index = _movingPortionInfo.PortionToBeMoved.GetIndex();
-            float newY =  _portionsContainer.GetChild<Portion>(index-1).GlobalPosition.Y;
             _movingPortionInfo.YOnRelease = newY;
             _portionsContainer.MoveChild(_movingPortionInfo.PortionToBeMoved, index-1);
             return;
         }
-        if (_checkPortionMovedDown(_movingPortionInfo.PortionToBeMoved))
+        if (_CheckPortionMovedDown(_movingPortionInfo.PortionToBeMoved))
         {
             int index = _movingPortionInfo.PortionToBeMoved.GetIndex();
-            float newY =  _portionsContainer.GetChild<Portion>(index+1).GlobalPosition.Y;
             _movingPortionInfo.YOnRelease = newY;
             _portionsContainer.MoveChild(_movingPortionInfo.PortionToBeMoved, index+1);
             return;
         }
     }
 
-
-    private bool _checkPortionMovedUp(Portion portion)
+    private bool _CheckPortionMovedUp(Portion portion)
     {
         int index = portion.GetIndex();
         if (index == 0 || _portionsContainer.GetChildCount()<=2)
@@ -77,7 +70,7 @@ public partial class PortionsList : Control
         float previousY = _portionsContainer.GetChild<Portion>(index-1).GlobalPosition.Y;
         return previousY > portion.GlobalPosition.Y;
     }
-    private bool _checkPortionMovedDown(Portion portion)
+    private bool _CheckPortionMovedDown(Portion portion)
     {
         int index = portion.GetIndex();
         if (index == _portionsContainer.GetChildCount()-2 || _portionsContainer.GetChildCount()<=2)
@@ -99,7 +92,7 @@ public partial class PortionsList : Control
         portion.MoveButtonChanged += OnPortionMoveButtonChanged;
         portion.Init(portionRes);
         _portionsContainer.AddChild(portion);
-        _portionsContainer.MoveChild(_addPortionButton, _portionsContainer.GetChildCount() - 1);
+        _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
 
         Globals.SetsData.AddPortion(portionRes.PortionName, portion);
         GetTree().CallGroup(
@@ -125,7 +118,7 @@ public partial class PortionsList : Control
             _portionsContainer.AddChild(portion);
         }
         
-        _portionsContainer.MoveChild(_addPortionButton, _portionsContainer.GetChildCount() - 1);
+        _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
     }
     public void _on_add_portion_button_button_down()
     {
@@ -141,6 +134,23 @@ public partial class PortionsList : Control
         _CreatePortion();
         _popupWindow.Hide();
     }
+    public void _on_delete_all_portion_button_button_down()
+    {
+        foreach(Portion portion in Globals.SetsData.PortionsDict.Values)
+        {
+            _portionsContainer.RemoveChild(portion);
+            Globals.SetsData.RemovePortion(portion.Info.PortionName);
+            portion.QueueFree();
+        }   
+    }
+    public void _on_reset_all_portion_button_button_down()
+    {
+        foreach(Portion portion in Globals.SetsData.PortionsDict.Values)
+        {
+            portion.SubstractValueToProgressBar(portion.Info.IntrisicValue);
+            portion.Info.IntrisicValue = 0;
+        }   
+    }
     public void OnPortionMoveButtonChanged(Portion portion, bool down)
     {
         if (down)
@@ -148,12 +158,12 @@ public partial class PortionsList : Control
             _movingPortionInfo.PortionToBeMoved = portion;
             _movingPortionInfo.YShift = GetGlobalMousePosition().Y - portion.GlobalPosition.Y;
             _movingPortionInfo.YOnRelease = portion.GlobalPosition.Y;
-            _movingPortionFlag = true;
+            SetPhysicsProcess(true);
             return;
         }
 
         _movingPortionInfo.SnapPosition();
         _movingPortionInfo.PortionToBeMoved = null;
-        _movingPortionFlag = false;
+        SetPhysicsProcess(false);
     }
 }

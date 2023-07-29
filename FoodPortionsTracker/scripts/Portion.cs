@@ -2,12 +2,13 @@ using Godot;
 using System.Linq;
 using System.Collections.Generic;
 
-public partial class Portion : VBoxContainer
+public partial class Portion : MarginContainer
 {
     private ProgressBar _progressBar;
     private Label _progressBarLabel;
     private Label _nameLabel;
     private PortionOptionsBox _portionOptionsBox;
+    private ColorRect _colorRect;
     private PortionRes _info = null;
     public PortionRes Info
     {
@@ -36,6 +37,7 @@ public partial class Portion : VBoxContainer
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
         _nameLabel = GetNode<Label>("%NameLabel");
         _portionOptionsBox = GetNode<PortionOptionsBox>("%PortionOptionsBox");
+        _colorRect = GetNode<ColorRect>("%ColorRect");
 
         if (_info == null)
             _info = new PortionRes();
@@ -44,6 +46,7 @@ public partial class Portion : VBoxContainer
         _InitProgressBar(_info);
         _portionOptionsBox.UpdateCheckBoxes(_info.LowerPortions, _info.UpperPortions);
         _portionOptionsBox.Disable(_info.PortionName);
+        _colorRect.Color = _info.PortionColor;
     }
 
 
@@ -135,7 +138,7 @@ public partial class Portion : VBoxContainer
     {
         _portionOptionsBox.Visible = pressed;
     }
-    public void _on_select_portion_children_box_confirmed_changes(Godot.Collections.Array<string> checkedChildren)
+    public void _on_portion_options_box_confirmed_changes(Godot.Collections.Array<string> checkedChildren)
     {
         IEnumerable<string> typesToBeAdded = checkedChildren.Except<string>(_info.LowerPortions);
         IEnumerable<string> typesToBeRemoved = _info.LowerPortions.Except<string>(checkedChildren);
@@ -180,5 +183,10 @@ public partial class Portion : VBoxContainer
     }
     public void _on_move_button_button_up(){
         EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, false});
+    }
+    public void _on_portion_options_box_color_changed(Color color)
+    {
+        _colorRect.Color = color;
+        _info.PortionColor = color;
     }
 }

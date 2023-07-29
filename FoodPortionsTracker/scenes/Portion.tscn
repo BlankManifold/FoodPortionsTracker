@@ -3,30 +3,50 @@
 [ext_resource type="Script" path="res://scripts/Portion.cs" id="1_h7dmx"]
 [ext_resource type="PackedScene" uid="uid://ddhrd35ifa0yj" path="res://scenes/PortionOptionsBox.tscn" id="2_iyop0"]
 
-[node name="Portion" type="VBoxContainer"]
-offset_right = 375.0
-offset_bottom = 61.0
+[node name="Portion" type="MarginContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 0
 script = ExtResource("1_h7dmx")
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="ColorRect" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.482353, 0.482353, 0.482353, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PortionMainBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/PortionMainBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Nome"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PortionMainBox"]
 layout_mode = 2
 
-[node name="MoveButton" type="Button" parent="HBoxContainer"]
+[node name="MoveButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
 text = " = "
 
-[node name="MinusButton" type="Button" parent="HBoxContainer"]
+[node name="MinusButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
-text = "MINUS"
+theme_override_font_sizes/font_size = 20
+text = " - "
 
-[node name="ProgressBar" type="ProgressBar" parent="HBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
@@ -34,7 +54,7 @@ step = 1.0
 rounded = true
 show_percentage = false
 
-[node name="ProgressBarLabel" type="Label" parent="HBoxContainer/ProgressBar"]
+[node name="ProgressBarLabel" type="Label" parent="MarginContainer/PortionMainBox/HBoxContainer/ProgressBar"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 8
@@ -52,24 +72,26 @@ text = "0/10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="PlusButton" type="Button" parent="HBoxContainer"]
+[node name="PlusButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
-text = "PLUS"
+theme_override_font_sizes/font_size = 20
+text = " + "
 
-[node name="SettingsButton" type="Button" parent="HBoxContainer"]
+[node name="SettingsButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
 toggle_mode = true
-text = "O"
+text = "..."
 
-[node name="PortionOptionsBox" parent="." instance=ExtResource("2_iyop0")]
+[node name="PortionOptionsBox" parent="MarginContainer/PortionMainBox" instance=ExtResource("2_iyop0")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[connection signal="button_down" from="HBoxContainer/MoveButton" to="." method="_on_move_button_button_down"]
-[connection signal="button_up" from="HBoxContainer/MoveButton" to="." method="_on_move_button_button_up"]
-[connection signal="button_down" from="HBoxContainer/MinusButton" to="." method="_on_minus_button_button_down"]
-[connection signal="button_down" from="HBoxContainer/PlusButton" to="." method="_on_plus_button_button_down"]
-[connection signal="toggled" from="HBoxContainer/SettingsButton" to="." method="_on_settings_button_toggled"]
-[connection signal="ConfirmedChanges" from="PortionOptionsBox" to="." method="_on_select_portion_children_box_confirmed_changes"]
-[connection signal="DeletePortion" from="PortionOptionsBox" to="." method="_on_select_portion_children_box_delete_portion"]
+[connection signal="button_down" from="MarginContainer/PortionMainBox/HBoxContainer/MoveButton" to="." method="_on_move_button_button_down"]
+[connection signal="button_up" from="MarginContainer/PortionMainBox/HBoxContainer/MoveButton" to="." method="_on_move_button_button_up"]
+[connection signal="button_down" from="MarginContainer/PortionMainBox/HBoxContainer/MinusButton" to="." method="_on_minus_button_button_down"]
+[connection signal="button_down" from="MarginContainer/PortionMainBox/HBoxContainer/PlusButton" to="." method="_on_plus_button_button_down"]
+[connection signal="toggled" from="MarginContainer/PortionMainBox/HBoxContainer/SettingsButton" to="." method="_on_settings_button_toggled"]
+[connection signal="ColorChanged" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_color_changed"]
+[connection signal="ConfirmedChanges" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_confirmed_changes"]
+[connection signal="DeletePortion" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_delete_portion"]

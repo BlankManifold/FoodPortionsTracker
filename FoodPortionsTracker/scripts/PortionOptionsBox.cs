@@ -9,10 +9,15 @@ public partial class PortionOptionsBox : VBoxContainer
     private Godot.Collections.Dictionary<string, CheckBox> _checkBoxesDict = new Godot.Collections.Dictionary<string, CheckBox>();
     private Godot.Collections.Dictionary<string, bool> _initialCheckBoxesNameDict = new Godot.Collections.Dictionary<string, bool>();
 
+
     [Signal]
     public delegate void ConfirmedChangesEventHandler(Godot.Collections.Array<string> checkedChildren);
     [Signal]
     public delegate void DeletePortionEventHandler();
+    [Signal]
+    public delegate void ColorChangedEventHandler(Color color);
+
+
     public void Init(Godot.Collections.Array<string> portionTypes)
     {
         foreach (string type in portionTypes)
@@ -27,6 +32,11 @@ public partial class PortionOptionsBox : VBoxContainer
     public override void _Ready()
     {
         _childrenCheckBoxesContainer = GetNode<GridContainer>("%ChildrenCheckBoxesContainer");
+        ColorPicker colorPicker = GetNode<ColorPickerButton>("%ColorPickerButton").GetPicker();
+        colorPicker.DeferredMode = true;
+        colorPicker.ColorModesVisible = false;
+        colorPicker.SlidersVisible = false;
+        colorPicker.HexVisible = false;
 
         Init(Globals.SetsData.AllTypes);
 
@@ -112,5 +122,10 @@ public partial class PortionOptionsBox : VBoxContainer
     {
         Visible = false;
         EmitSignal(SignalName.DeletePortion);
+    }
+
+    public void _on_color_picker_button_color_changed(Color color)
+    {
+        EmitSignal(SignalName.ColorChanged, color);
     }
 }

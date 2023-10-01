@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class PortionsList : Control
 {
@@ -90,6 +89,7 @@ public partial class PortionsList : Control
         Portion portion = Globals.PackedScenes.Portion.Instantiate<Portion>();
 
         portion.MoveButtonChanged += OnPortionMoveButtonChanged;
+        // portion.PortionNameChanged += OnPortionNameChanged;
         portion.Init(portionRes);
         Globals.SetsData.AddPortion(portionRes.PortionName, portion);
 
@@ -109,6 +109,8 @@ public partial class PortionsList : Control
         {
             Portion portion = Globals.PackedScenes.Portion.Instantiate<Portion>();
             portion.MoveButtonChanged += OnPortionMoveButtonChanged;
+            // portion.PortionNameChanged += OnPortionNameChanged;
+
             portion.Init(portionRes);
             Globals.SetsData.AddPortion(portionRes.PortionName, portion);
         }
@@ -120,6 +122,8 @@ public partial class PortionsList : Control
         
         _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
     }
+    
+    
     public void _on_add_portion_button_button_down()
     {
         _popupWindow.Show();
@@ -166,4 +170,9 @@ public partial class PortionsList : Control
         _movingPortionInfo.PortionToBeMoved = null;
         SetPhysicsProcess(false);
     }
+    // public void OnPortionNameChanged(string newName)
+    // {
+        
+    // }
+
 }

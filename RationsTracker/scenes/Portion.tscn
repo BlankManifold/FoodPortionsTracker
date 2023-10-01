@@ -26,11 +26,14 @@ theme_override_constants/margin_bottom = 10
 [node name="PortionMainBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="NameLabel" type="Label" parent="MarginContainer/PortionMainBox"]
+[node name="NameLabel" type="LineEdit" parent="MarginContainer/PortionMainBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Nome"
+alignment = 1
+flat = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/PortionMainBox"]
 layout_mode = 2
@@ -87,6 +90,7 @@ unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
+[connection signal="text_submitted" from="MarginContainer/PortionMainBox/NameLabel" to="." method="_on_name_label_text_submitted"]
 [connection signal="button_down" from="MarginContainer/PortionMainBox/HBoxContainer/MoveButton" to="." method="_on_move_button_button_down"]
 [connection signal="button_up" from="MarginContainer/PortionMainBox/HBoxContainer/MoveButton" to="." method="_on_move_button_button_up"]
 [connection signal="button_down" from="MarginContainer/PortionMainBox/HBoxContainer/MinusButton" to="." method="_on_minus_button_button_down"]

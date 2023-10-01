@@ -28,6 +28,18 @@ namespace Globals
             PortionsDict.Remove(type);
             AllTypes.Remove(type);
         }
+        public static void ChangePortionName(string newType, string oldType)
+        {
+            PortionsDict[newType] = PortionsDict[oldType];
+            PortionsDict.Remove(oldType); 
+            AllTypes.Remove(oldType);
+            AllTypes.Add(newType);
+        }
+
+        public static bool ContainsPortionType(string type)
+        {
+            return PortionsDict.ContainsKey(type);
+        }
     }
 
 

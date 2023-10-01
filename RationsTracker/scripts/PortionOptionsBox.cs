@@ -109,6 +109,12 @@ public partial class PortionOptionsBox : VBoxContainer
                     x => x.Key)
             );
     }
+     public void UpdateCheckBoxName(string oldName, string newName)
+     {
+        _checkBoxesDict[newName] = _checkBoxesDict[oldName];
+        _checkBoxesDict.Remove(oldName);
+        _checkBoxesDict[newName].Text = newName;
+     }
 
     public void _on_confirm_button_button_down()
     {

@@ -28,8 +28,39 @@ theme_override_font_sizes/font_size = 36
 text = "Food Portions Tracker"
 horizontal_alignment = 1
 
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Weekly"
+
+[node name="SelectionResetDayButton" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+item_count = 7
+selected = 0
+popup/item_0/text = "Monday"
+popup/item_0/id = 0
+popup/item_1/text = "Tuesday"
+popup/item_1/id = 1
+popup/item_2/text = "Wednesday"
+popup/item_2/id = 2
+popup/item_3/text = "Thursday"
+popup/item_3/id = 3
+popup/item_4/text = "Friday"
+popup/item_4/id = 4
+popup/item_5/text = "Saturday"
+popup/item_5/id = 5
+popup/item_6/text = "Sunday"
+popup/item_6/id = 6
+
 [node name="PortionsList" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_ddype")]
 unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/HBoxContainer/SelectionResetDayButton" to="." method="_on_selection_reset_day_button_item_selected"]

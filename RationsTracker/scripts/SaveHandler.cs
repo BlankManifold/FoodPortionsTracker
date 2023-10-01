@@ -48,6 +48,7 @@ namespace Handlers
 			string configFilePath = System.IO.Path.Combine(Globals.Paths.SaveConfigs, $"main_config.cfg");
 			ConfigFile config = new ConfigFile();
 			
+			
 			config.Save(configFilePath);
 		}
         static public void CreateSaveSetsDir()

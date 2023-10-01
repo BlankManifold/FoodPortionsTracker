@@ -6,7 +6,7 @@ public partial class Portion : MarginContainer
 {
     private ProgressBar _progressBar;
     private Label _progressBarLabel;
-    private Label _nameLabel;
+    private LineEdit _nameLabel;
     private PortionOptionsBox _portionOptionsBox;
     private ColorRect _colorRect;
     private PortionRes _info = null;
@@ -17,6 +17,9 @@ public partial class Portion : MarginContainer
 
     [Signal]
     public delegate void MoveButtonChangedEventHandler(Portion portion, bool down);
+    [Signal]
+    public delegate void PortionNameChangedEventHandler(string newName);
+
 
     public void Init(PortionRes info)
     {
@@ -28,7 +31,7 @@ public partial class Portion : MarginContainer
 
         _progressBar = GetNode<ProgressBar>("%ProgressBar");
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
-        _nameLabel = GetNode<Label>("%NameLabel");
+        _nameLabel = GetNode<LineEdit>("%NameLabel");
         _portionOptionsBox = GetNode<PortionOptionsBox>("%PortionOptionsBox");
         _colorRect = GetNode<ColorRect>("%ColorRect");
 
@@ -122,7 +125,21 @@ public partial class Portion : MarginContainer
             _UpdateUpperPortions(delta, false);
         }
     }
+    public void UpdateCheckBoxName(string oldName, string newName)
+    {
+        if (_info.UpperPortions.Contains(oldName))
+        {
+            _info.UpperPortions.Remove(oldName);
+            _info.UpperPortions.Add(newName);
+        }
+        if (_info.LowerPortions.Contains(oldName))
+        {
+            _info.LowerPortions.Remove(oldName);
+            _info.LowerPortions.Add(newName);
+        }
 
+        _portionOptionsBox.UpdateCheckBoxName(oldName, newName);
+    }
 
     public void _on_minus_button_button_down()
     {
@@ -182,11 +199,31 @@ public partial class Portion : MarginContainer
         _colorRect.Color = color;
         _info.PortionColor = color;
     }
-    public void _on_move_button_button_down(){
-        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, true});
+    public void _on_move_button_button_down()
+    {
+        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, true });
     }
-    public void _on_move_button_button_up(){
-        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, false});
+    public void _on_move_button_button_up()
+    {
+        EmitSignal(SignalName.MoveButtonChanged, new Variant[] { this, false });
     }
-    
+    public void _on_name_label_text_submitted(string newText)
+    {
+        if (!Globals.SetsData.ContainsPortionType(newText))
+        {
+            string oldName = _info.PortionName;
+
+            GetTree().CallGroup(
+                "portions",
+                Portion.MethodName.UpdateCheckBoxName,
+                new Variant[] {oldName, newText}
+                );
+
+            _info.PortionName = newText;
+            // EmitSignal(SignalName.PortionNameChanged, new Variant[] { newText });
+        }
+
+        _nameLabel.ReleaseFocus();
+    }
+
 }

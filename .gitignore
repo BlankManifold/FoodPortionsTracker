@@ -1,2 +1,10 @@
 # Godot stuff
 .godot/
+export_presets.cfg
+
+# Other outer stuff
+assets/
+exports/
+
+# VSCode
+.vscode/

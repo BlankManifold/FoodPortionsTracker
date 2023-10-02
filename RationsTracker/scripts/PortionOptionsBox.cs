@@ -6,6 +6,8 @@ using System.Collections.Generic;
 public partial class PortionOptionsBox : VBoxContainer
 {
     private GridContainer _childrenCheckBoxesContainer;
+    private ColorPicker _colorPicker;
+    private ColorPickerButton _colorPickerButton;
     private Godot.Collections.Dictionary<string, CheckBox> _checkBoxesDict = new Godot.Collections.Dictionary<string, CheckBox>();
     private Godot.Collections.Dictionary<string, bool> _initialCheckBoxesNameDict = new Godot.Collections.Dictionary<string, bool>();
 
@@ -32,11 +34,12 @@ public partial class PortionOptionsBox : VBoxContainer
     public override void _Ready()
     {
         _childrenCheckBoxesContainer = GetNode<GridContainer>("%ChildrenCheckBoxesContainer");
-        ColorPicker colorPicker = GetNode<ColorPickerButton>("%ColorPickerButton").GetPicker();
-        colorPicker.DeferredMode = true;
-        colorPicker.ColorModesVisible = false;
-        colorPicker.SlidersVisible = false;
-        colorPicker.HexVisible = false;
+        _colorPickerButton = GetNode<ColorPickerButton>("%ColorPickerButton");
+        _colorPicker = _colorPickerButton.GetPicker();
+        _colorPicker.DeferredMode = true;
+        _colorPicker.ColorModesVisible = false;
+        _colorPicker.SlidersVisible = false;
+        _colorPicker.HexVisible = false;
 
         Init(Globals.SetsData.AllTypes);
 
@@ -109,12 +112,18 @@ public partial class PortionOptionsBox : VBoxContainer
                     x => x.Key)
             );
     }
-     public void UpdateCheckBoxName(string oldName, string newName)
-     {
+    public void UpdateCheckBoxName(string oldName, string newName)
+    {
         _checkBoxesDict[newName] = _checkBoxesDict[oldName];
         _checkBoxesDict.Remove(oldName);
         _checkBoxesDict[newName].Text = newName;
-     }
+    }
+    public void UpdateColorPickerColor(Color color)
+    {
+        _colorPicker.Color = color;
+        _colorPickerButton.Color = color;
+    }
+
 
     public void _on_confirm_button_button_down()
     {

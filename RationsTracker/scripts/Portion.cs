@@ -8,7 +8,8 @@ public partial class Portion : MarginContainer
     private Label _progressBarLabel;
     private LineEdit _nameLabel;
     private PortionOptionsBox _portionOptionsBox;
-    private ColorRect _colorRect;
+    // private ColorRect _colorRect;
+    private Panel _colorRect;
     private PortionRes _info = null;
     public PortionRes Info
     {
@@ -33,19 +34,27 @@ public partial class Portion : MarginContainer
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
         _nameLabel = GetNode<LineEdit>("%NameLabel");
         _portionOptionsBox = GetNode<PortionOptionsBox>("%PortionOptionsBox");
-        _colorRect = GetNode<ColorRect>("%ColorRect");
+        // _colorRect = GetNode<ColorRect>("%ColorRect");
+        _colorRect = GetNode<Panel>("%ColorRect");
 
         if (_info == null)
             _info = new PortionRes();
 
         _nameLabel.Text = _info.PortionName;
         _InitProgressBar(_info);
+        _UpdateMainColor(_info.PortionColor);
+
+        _portionOptionsBox.UpdateColorPickerColor(_info.PortionColor);
         _portionOptionsBox.UpdateCheckBoxes(_info.LowerPortions, _info.UpperPortions);
         _portionOptionsBox.Disable(_info.PortionName);
-        _colorRect.Color = _info.PortionColor;
+        
     }
 
-
+    private void _UpdateMainColor(Color color)
+    {
+        // _colorRect.Color = color;
+        _colorRect.SelfModulate = color;
+    }
     private void _InitProgressBar(PortionRes info)
     {
         _progressBar.MinValue = info.MinValue;
@@ -100,6 +109,10 @@ public partial class Portion : MarginContainer
     public void RemoveSelectionCheckBox(string type)
     {
         _portionOptionsBox.RemoveCheckBox(type);
+    }
+    public void UpdateColorPickerColor(Color color)
+    {
+        _portionOptionsBox.UpdateColorPickerColor(color);
     }
     public void DisableSelectionCheckBox(string type, bool disable)
     {
@@ -196,7 +209,7 @@ public partial class Portion : MarginContainer
     }
     public void _on_portion_options_box_color_changed(Color color)
     {
-        _colorRect.Color = color;
+        _UpdateMainColor(color);
         _info.PortionColor = color;
     }
     public void _on_move_button_button_down()

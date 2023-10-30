@@ -17,6 +17,8 @@ public partial class PortionOptionsBox : VBoxContainer
     [Signal]
     public delegate void DeletePortionEventHandler();
     [Signal]
+    public delegate void DisablePortionEventHandler(bool disable);
+    [Signal]
     public delegate void ColorChangedEventHandler(Color color);
 
 
@@ -140,6 +142,10 @@ public partial class PortionOptionsBox : VBoxContainer
     {
         Visible = false;
         EmitSignal(SignalName.DeletePortion);
+    }
+    public void _on_disable_button_toggled(bool pressed)
+    {
+        EmitSignal(SignalName.DisablePortion, pressed);
     }
 
     public void _on_color_picker_button_color_changed(Color color)

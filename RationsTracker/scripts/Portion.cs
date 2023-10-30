@@ -10,6 +10,7 @@ public partial class Portion : MarginContainer
     private PortionOptionsBox _portionOptionsBox;
     // private ColorRect _colorRect;
     private Panel _colorRect;
+    private bool _enabled = true;
     private PortionRes _info = null;
     public PortionRes Info
     {
@@ -84,7 +85,16 @@ public partial class Portion : MarginContainer
         }
     }
 
+    public void Disable(bool enabled = false)
+    {
+        _enabled = enabled;
+        _nameLabel.Editable = enabled;
 
+        GetNode<Button>("%MinusButton").Disabled = !enabled; 
+        GetNode<Button>("%PlusButton").Disabled = !enabled; 
+
+        
+    }
     public void RemoveLowerPortion(Portion portion)
     {
         _info.LowerPortions.Remove(portion.Info.PortionName);
@@ -206,6 +216,10 @@ public partial class Portion : MarginContainer
         );
         Globals.SetsData.RemovePortion(_info.PortionName);
         QueueFree();
+    }
+    public void _on_portion_options_box_disable_portion(bool disable)
+    {
+        Disable(!disable);
     }
     public void _on_portion_options_box_color_changed(Color color)
     {

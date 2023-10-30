@@ -36,60 +36,69 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
 text = "Add a portion"
 
 [node name="DeleteAllPortionButton" type="Button" parent="ScrollContainer/PortionsContainer/ListButtonsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
 text = "Delete all portions"
 
 [node name="ResetAllPortionButton" type="Button" parent="ScrollContainer/PortionsContainer/ListButtonsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 24
 text = "Reset all portion values"
 
 [node name="PopupWindow" type="Window" parent="."]
 unique_name_in_owner = true
 title = "Add a portion type"
 initial_position = 1
-size = Vector2i(308, 117)
+size = Vector2i(450, 145)
 visible = false
 wrap_controls = true
 unresizable = true
 always_on_top = true
 popup_window = true
+min_size = Vector2i(450, 0)
+theme_override_font_sizes/title_font_size = 36
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PopupWindow"]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 308.0
-offset_bottom = 117.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_constants/separation = 10
 
 [node name="NameBox" type="HBoxContainer" parent="PopupWindow/VBoxContainer"]
 layout_mode = 2
 
 [node name="NameLabel" type="Label" parent="PopupWindow/VBoxContainer/NameBox"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Name: "
 
 [node name="NameLineEdit" type="LineEdit" parent="PopupWindow/VBoxContainer/NameBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 placeholder_text = "name of portion"
 
 [node name="TargetValue" type="HBoxContainer" parent="PopupWindow/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 0
 size_flags_vertical = 4
 
 [node name="TargetValueLabel" type="Label" parent="PopupWindow/VBoxContainer/TargetValue"]
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(175, 0)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Target value:"
 
 [node name="TargetValueSpinBox" type="SpinBox" parent="PopupWindow/VBoxContainer/TargetValue"]
@@ -107,6 +116,7 @@ update_on_text_changed = true
 [node name="AddButton" type="Button" parent="PopupWindow/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
 text = "Add"
 
 [connection signal="button_down" from="ScrollContainer/PortionsContainer/ListButtonsContainer/AddPortionButton" to="." method="_on_add_portion_button_button_down"]

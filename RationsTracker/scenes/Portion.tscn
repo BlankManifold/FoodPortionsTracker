@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://sjb8vfaidkmq"]
+[gd_scene load_steps=4 format=3 uid="uid://sjb8vfaidkmq"]
 
 [ext_resource type="Script" path="res://scripts/Portion.cs" id="1_h7dmx"]
 [ext_resource type="PackedScene" uid="uid://ddhrd35ifa0yj" path="res://scenes/PortionOptionsBox.tscn" id="2_iyop0"]
@@ -10,12 +10,11 @@ corner_radius_top_right = 25
 corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 
-[sub_resource type="Theme" id="Theme_mcghr"]
-
 [node name="Portion" type="MarginContainer"]
 anchors_preset = 10
 anchor_right = 1.0
 grow_horizontal = 2
+size_flags_vertical = 3
 theme_override_constants/margin_left = 0
 script = ExtResource("1_h7dmx")
 
@@ -25,14 +24,6 @@ self_modulate = Color(0.54902, 0.54902, 0.54902, 1)
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f74db")
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 2
-theme = SubResource("Theme_mcghr")
-color = Color(0.482353, 0.482353, 0.482353, 1)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
@@ -48,7 +39,7 @@ layout_mode = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(500, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 30
 text = "Nome"
 alignment = 1
 flat = true
@@ -58,11 +49,13 @@ layout_mode = 2
 
 [node name="MoveButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
 text = " = "
 
 [node name="MinusButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 36
 text = " - "
 
 [node name="ProgressBar" type="ProgressBar" parent="MarginContainer/PortionMainBox/HBoxContainer"]
@@ -89,17 +82,20 @@ offset_right = 20.0
 offset_bottom = 11.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 24
 text = "0/10"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="PlusButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 36
 text = " + "
 
 [node name="SettingsButton" type="Button" parent="MarginContainer/PortionMainBox/HBoxContainer"]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
 toggle_mode = true
 text = "..."
 
@@ -117,3 +113,4 @@ layout_mode = 2
 [connection signal="ColorChanged" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_color_changed"]
 [connection signal="ConfirmedChanges" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_confirmed_changes"]
 [connection signal="DeletePortion" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_delete_portion"]
+[connection signal="DisablePortion" from="MarginContainer/PortionMainBox/PortionOptionsBox" to="." method="_on_portion_options_box_disable_portion"]

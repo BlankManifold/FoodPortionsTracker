@@ -8,9 +8,7 @@ public partial class Portion : MarginContainer
     private Label _progressBarLabel;
     private LineEdit _nameLabel;
     private PortionOptionsBox _portionOptionsBox;
-    // private ColorRect _colorRect;
     private Panel _colorRect;
-    private bool _enabled = true;
     private PortionRes _info = null;
     public PortionRes Info
     {
@@ -35,7 +33,6 @@ public partial class Portion : MarginContainer
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
         _nameLabel = GetNode<LineEdit>("%NameLabel");
         _portionOptionsBox = GetNode<PortionOptionsBox>("%PortionOptionsBox");
-        // _colorRect = GetNode<ColorRect>("%ColorRect");
         _colorRect = GetNode<Panel>("%ColorRect");
 
         if (_info == null)
@@ -53,7 +50,6 @@ public partial class Portion : MarginContainer
 
     private void _UpdateMainColor(Color color)
     {
-        // _colorRect.Color = color;
         _colorRect.SelfModulate = color;
     }
     private void _InitProgressBar(PortionRes info)
@@ -62,6 +58,10 @@ public partial class Portion : MarginContainer
         _progressBar.MaxValue = info.MaxValue;
         _progressBar.Value = info.Value;
         _UpdateProgressBarLabel(info.Value);
+
+        if (!_info.Enabled)
+            Disable();
+        
     }
     private void _UpdateProgressBarLabel(int value)
     {
@@ -87,7 +87,7 @@ public partial class Portion : MarginContainer
 
     public void Disable(bool enabled = false)
     {
-        _enabled = enabled;
+        _info.Enabled = enabled;
         _nameLabel.Editable = enabled;
 
         GetNode<Button>("%MinusButton").Disabled = !enabled; 

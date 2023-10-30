@@ -4,6 +4,7 @@ public partial class PortionRes : Resource
 {
     // [Export] public string Identifier;
     [Export] public string PortionName;
+    [Export] public bool Enabled;
     [Export] public int MaxValue;
     [Export] public int MinValue;
     [Export] public int Value;
@@ -16,6 +17,7 @@ public partial class PortionRes : Resource
     {  
         // Identifier = $"{Convert.ToString(0,16)}";   
         PortionName = ""; 
+        Enabled = true; 
         MaxValue = 0; 
         MinValue = 0; 
         Value = 0; 

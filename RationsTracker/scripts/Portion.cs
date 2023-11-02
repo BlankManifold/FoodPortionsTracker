@@ -14,6 +14,12 @@ public partial class Portion : MarginContainer
     {
         get { return _info; }
     }
+    private string _setName = "";
+    public string SetName 
+    {
+        get { return _setName; }
+        set { _setName = value; }
+    }
 
     [Signal]
     public delegate void MoveButtonChangedEventHandler(Portion portion, bool down);
@@ -21,14 +27,13 @@ public partial class Portion : MarginContainer
     public delegate void PortionNameChangedEventHandler(string newName);
 
 
-    public void Init(PortionRes info)
+    public void Init(string setName, PortionRes info)
     {
+        _setName = setName;
         _info = info;
     }
     public override void _Ready()
     {
-        AddToGroup("portions");
-
         _progressBar = GetNode<ProgressBar>("%ProgressBar");
         _progressBarLabel = GetNode<Label>("%ProgressBarLabel");
         _nameLabel = GetNode<LineEdit>("%NameLabel");
@@ -42,10 +47,12 @@ public partial class Portion : MarginContainer
         _InitProgressBar(_info);
         _UpdateMainColor(_info.PortionColor);
 
+        _portionOptionsBox.Init(Globals.SetsData.PortionsTypesDict[_setName]);
         _portionOptionsBox.UpdateColorPickerColor(_info.PortionColor);
         _portionOptionsBox.UpdateCheckBoxes(_info.LowerPortions, _info.UpperPortions);
         _portionOptionsBox.Disable(_info.PortionName);
-        
+
+        AddToGroup($"portions_{_setName}");
     }
 
     private void _UpdateMainColor(Color color)
@@ -73,14 +80,14 @@ public partial class Portion : MarginContainer
         {
             foreach (string type in _info.UpperPortions)
             {
-                Globals.SetsData.PortionsDict[type].AddValueToProgressBar(delta);
+                Globals.SetsData.PortionsDict[_setName][type].AddValueToProgressBar(delta);
             }
         }
         else
         {
             foreach (string type in _info.UpperPortions)
             {
-                Globals.SetsData.PortionsDict[type].SubstractValueToProgressBar(delta);
+                Globals.SetsData.PortionsDict[_setName][type].SubstractValueToProgressBar(delta);
             }
         }
     }
@@ -187,7 +194,7 @@ public partial class Portion : MarginContainer
         {
             foreach (string type in typesToBeAdded)
             {
-                Portion portion = Globals.SetsData.PortionsDict[type];
+                Portion portion = Globals.SetsData.PortionsDict[_setName][type];
                 AddLowerPortion(portion);
             }
         }
@@ -196,7 +203,7 @@ public partial class Portion : MarginContainer
         {
             foreach (string type in typesToBeRemoved)
             {
-                Portion portion = Globals.SetsData.PortionsDict[type];
+                Portion portion = Globals.SetsData.PortionsDict[_setName][type];
                 RemoveLowerPortion(portion);
             }
         }
@@ -205,16 +212,14 @@ public partial class Portion : MarginContainer
     {
         foreach (string type in _info.UpperPortions)
         {
-            Portion portion = Globals.SetsData.PortionsDict[type];
+            Portion portion = Globals.SetsData.PortionsDict[_setName][type];
             portion.RemoveLowerPortion(this);
         }
 
         GetTree().CallGroup(
-            "portions",
-            Portion.MethodName.RemoveSelectionCheckBox,
-            new Variant[] { _info.PortionName }
-        );
-        Globals.SetsData.RemovePortion(_info.PortionName);
+            $"portions_{_setName}", MethodName.RemoveSelectionCheckBox, new Variant[] { _info.PortionName }
+            );
+        Globals.SetsData.RemovePortion(_setName, _info.PortionName, this);
         QueueFree();
     }
     public void _on_portion_options_box_disable_portion(bool disable)
@@ -236,14 +241,12 @@ public partial class Portion : MarginContainer
     }
     public void _on_name_label_text_submitted(string newText)
     {
-        if (!Globals.SetsData.ContainsPortionType(newText))
+        if (!Globals.SetsData.ContainsPortionType(_setName, newText))
         {
             string oldName = _info.PortionName;
 
             GetTree().CallGroup(
-                "portions",
-                Portion.MethodName.UpdateCheckBoxName,
-                new Variant[] {oldName, newText}
+                $"portions_{_setName}", MethodName.UpdateCheckBoxName, new Variant[] {oldName, newText}
                 );
 
             _info.PortionName = newText;

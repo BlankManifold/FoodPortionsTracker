@@ -10,7 +10,7 @@ public partial class PortionOptionsBox : VBoxContainer
     private ColorPickerButton _colorPickerButton;
     private Godot.Collections.Dictionary<string, CheckBox> _checkBoxesDict = new Godot.Collections.Dictionary<string, CheckBox>();
     private Godot.Collections.Dictionary<string, bool> _initialCheckBoxesNameDict = new Godot.Collections.Dictionary<string, bool>();
-
+    private string _setName = "";
 
     [Signal]
     public delegate void ConfirmedChangesEventHandler(Godot.Collections.Array<string> checkedChildren);
@@ -20,7 +20,6 @@ public partial class PortionOptionsBox : VBoxContainer
     public delegate void DisablePortionEventHandler(bool disable);
     [Signal]
     public delegate void ColorChangedEventHandler(Color color);
-
 
     public void Init(Godot.Collections.Array<string> portionTypes)
     {
@@ -32,6 +31,10 @@ public partial class PortionOptionsBox : VBoxContainer
 
             _checkBoxesDict.Add(type, checkBox);
         }
+
+        foreach (CheckBox checkBox in _checkBoxesDict.Values)
+            _childrenCheckBoxesContainer.AddChild(checkBox);
+        
     }
     public override void _Ready()
     {
@@ -42,11 +45,6 @@ public partial class PortionOptionsBox : VBoxContainer
         _colorPicker.ColorModesVisible = false;
         _colorPicker.SlidersVisible = false;
         _colorPicker.HexVisible = false;
-
-        Init(Globals.SetsData.AllTypes);
-
-        foreach (CheckBox checkBox in _checkBoxesDict.Values)
-            _childrenCheckBoxesContainer.AddChild(checkBox);
     }
 
     public void Disable(string name, bool disable = true)

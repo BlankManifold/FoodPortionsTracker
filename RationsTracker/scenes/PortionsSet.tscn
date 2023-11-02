@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dddafasecl6tu"]
+[gd_scene load_steps=2 format=3 uid="uid://b7y6eycgy5mmh"]
 
-[ext_resource type="Script" path="res://scripts/PortionsList.cs" id="1_ivxfj"]
+[ext_resource type="Script" path="res://scripts/PortionsSet.cs" id="1_vwtwd"]
 
-[node name="PortionsList" type="Control"]
+[node name="PortionsSet" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-script = ExtResource("1_ivxfj")
+script = ExtResource("1_vwtwd")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 1
@@ -22,31 +22,36 @@ grow_horizontal = 2
 grow_vertical = 2
 horizontal_scroll_mode = 0
 
-[node name="PortionsContainer" type="VBoxContainer" parent="ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 25
+
+[node name="PortionsContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 30
 
-[node name="ListButtonsContainer" type="HBoxContainer" parent="ScrollContainer/PortionsContainer"]
+[node name="ListButtonsContainer" type="HBoxContainer" parent="ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="AddPortionButton" type="Button" parent="ScrollContainer/PortionsContainer/ListButtonsContainer"]
+[node name="AddPortionButton" type="Button" parent="ScrollContainer/VBoxContainer/ListButtonsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Add a portion"
 
-[node name="DeleteAllPortionButton" type="Button" parent="ScrollContainer/PortionsContainer/ListButtonsContainer"]
+[node name="DeleteAllPortionButton" type="Button" parent="ScrollContainer/VBoxContainer/ListButtonsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
 text = "Delete all portions"
 
-[node name="ResetAllPortionButton" type="Button" parent="ScrollContainer/PortionsContainer/ListButtonsContainer"]
+[node name="ResetAllPortionButton" type="Button" parent="ScrollContainer/VBoxContainer/ListButtonsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -119,8 +124,8 @@ size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 24
 text = "Add"
 
-[connection signal="button_down" from="ScrollContainer/PortionsContainer/ListButtonsContainer/AddPortionButton" to="." method="_on_add_portion_button_button_down"]
-[connection signal="button_down" from="ScrollContainer/PortionsContainer/ListButtonsContainer/DeleteAllPortionButton" to="." method="_on_delete_all_portion_button_button_down"]
-[connection signal="button_down" from="ScrollContainer/PortionsContainer/ListButtonsContainer/ResetAllPortionButton" to="." method="_on_reset_all_portion_button_button_down"]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer/ListButtonsContainer/AddPortionButton" to="." method="_on_add_portion_button_button_down"]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer/ListButtonsContainer/DeleteAllPortionButton" to="." method="_on_delete_all_portion_button_button_down"]
+[connection signal="button_down" from="ScrollContainer/VBoxContainer/ListButtonsContainer/ResetAllPortionButton" to="." method="_on_reset_all_portion_button_button_down"]
 [connection signal="close_requested" from="PopupWindow" to="." method="_on_popup_window_close_requested"]
 [connection signal="button_down" from="PopupWindow/VBoxContainer/AddButton" to="." method="_on_add_button_button_down"]

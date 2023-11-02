@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://7vrirh8jjl5"]
+[gd_scene load_steps=4 format=3 uid="uid://7vrirh8jjl5"]
 
-[ext_resource type="PackedScene" uid="uid://dddafasecl6tu" path="res://scenes/PortionsList.tscn" id="1_ddype"]
 [ext_resource type="Script" path="res://scripts/Main.cs" id="1_v4nr4"]
+[ext_resource type="PackedScene" uid="uid://b7y6eycgy5mmh" path="res://scenes/PortionsSet.tscn" id="2_ef1n1"]
+[ext_resource type="Script" path="res://scripts/PortionsSet.cs" id="2_qg5t6"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_v4nr4")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="BackGroundColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -15,7 +16,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.784314, 0.780392, 0.741176, 1)
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MainMarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -28,11 +29,12 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="MainContainer" type="VBoxContainer" parent="MainMarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 30
+script = ExtResource("2_qg5t6")
 
-[node name="MainLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+[node name="MainLabel" type="Label" parent="MainMarginContainer/MainContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
@@ -40,18 +42,61 @@ theme_override_font_sizes/font_size = 48
 text = "Rations Tracker"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="SetButtonContainer" type="HBoxContainer" parent="MainMarginContainer/MainContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="AddSetButton" type="Button" parent="MainMarginContainer/MainContainer/SetButtonContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Add new set"
+
+[node name="RemoveSetButton" type="Button" parent="MainMarginContainer/MainContainer/SetButtonContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "Delete current set"
+
+[node name="ChangeSetContainer" type="HBoxContainer" parent="MainMarginContainer/MainContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 100
+alignment = 1
+
+[node name="PreviousSetButton" type="Button" parent="MainMarginContainer/MainContainer/ChangeSetContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "<"
+
+[node name="SetNameLineEdit" type="LineEdit" parent="MainMarginContainer/MainContainer/ChangeSetContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.176471, 0.176471, 0.176471, 1)
+theme_override_colors/font_placeholder_color = Color(0.156863, 0.156863, 0.156863, 0.490196)
+theme_override_font_sizes/font_size = 36
+placeholder_text = "Set Name"
+alignment = 1
+flat = true
+
+[node name="NextSetButton" type="Button" parent="MainMarginContainer/MainContainer/ChangeSetContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = ">"
+
+[node name="ResetDayContainer" type="HBoxContainer" parent="MainMarginContainer/MainContainer"]
 layout_mode = 2
 theme_override_constants/separation = 50
 alignment = 1
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MainMarginContainer/MainContainer/ResetDayContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.215686, 0.215686, 0.215686, 1)
 theme_override_font_sizes/font_size = 36
 text = "Weekly"
 
-[node name="SelectionResetDayButton" type="OptionButton" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="SelectionResetDayButton" type="OptionButton" parent="MainMarginContainer/MainContainer/ResetDayContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 alignment = 1
@@ -72,9 +117,77 @@ popup/item_5/id = 5
 popup/item_6/text = "Sunday"
 popup/item_6/id = 6
 
-[node name="PortionsList" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_ddype")]
+[node name="PortionsSet" parent="MainMarginContainer/MainContainer" instance=ExtResource("2_ef1n1")]
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="AddNewSetWindow" type="Window" parent="MainMarginContainer"]
+unique_name_in_owner = true
+title = "Add new set"
+initial_position = 1
+size = Vector2i(300, 125)
+visible = false
+unresizable = true
+always_on_top = true
+popup_window = true
+min_size = Vector2i(300, 125)
+theme_override_font_sizes/title_font_size = 30
+
+[node name="MarginContainer" type="MarginContainer" parent="MainMarginContainer/AddNewSetWindow"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMarginContainer/AddNewSetWindow/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Set name:"
+
+[node name="AddNewSetLineEdit" type="LineEdit" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+placeholder_text = "set name"
+
+[node name="AddNewSetButtonsContainer" type="HBoxContainer" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ConfirmButton" type="Button" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/AddNewSetButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Add set"
+
+[node name="CancelButton" type="Button" parent="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/AddNewSetButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
-[connection signal="item_selected" from="MarginContainer/VBoxContainer/HBoxContainer/SelectionResetDayButton" to="." method="_on_selection_reset_day_button_item_selected"]
+[connection signal="button_down" from="MainMarginContainer/MainContainer/SetButtonContainer/AddSetButton" to="." method="_on_add_set_button_button_down"]
+[connection signal="button_down" from="MainMarginContainer/MainContainer/ChangeSetContainer/PreviousSetButton" to="." method="_on_previous_set_button_button_down"]
+[connection signal="text_submitted" from="MainMarginContainer/MainContainer/ChangeSetContainer/SetNameLineEdit" to="." method="_on_set_name_line_edit_text_submitted"]
+[connection signal="button_down" from="MainMarginContainer/MainContainer/ChangeSetContainer/NextSetButton" to="." method="_on_next_set_button_button_down"]
+[connection signal="item_selected" from="MainMarginContainer/MainContainer/ResetDayContainer/SelectionResetDayButton" to="." method="_on_selection_reset_day_button_item_selected"]
+[connection signal="AddPortion" from="MainMarginContainer/MainContainer/PortionsSet" to="." method="_on_portions_set_add_portion"]
+[connection signal="button_down" from="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/AddNewSetButtonsContainer/ConfirmButton" to="." method="_on_confirm_button_button_down"]
+[connection signal="button_down" from="MainMarginContainer/AddNewSetWindow/MarginContainer/VBoxContainer/AddNewSetButtonsContainer/CancelButton" to="." method="_on_cancel_button_button_down"]

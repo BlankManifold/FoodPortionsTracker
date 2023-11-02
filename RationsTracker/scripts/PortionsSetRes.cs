@@ -15,4 +15,12 @@ public partial class PortionsSetRes : Resource
         PortionsResList = new Godot.Collections.Array<PortionRes> {};  
     }
 
+    public void AddPortion(Portion portion)
+    {
+        PortionsResList.Add(portion.Info);
+    }
+    public void RemovePortion(Portion portion)
+    {
+        PortionsResList.Remove(portion.Info);
+    }
 }

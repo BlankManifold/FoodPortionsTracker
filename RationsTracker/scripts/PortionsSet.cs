@@ -1,13 +1,8 @@
 using Godot;
+using System.Collections.Generic;
 
-public partial class PortionsList : Control
-{
-    private Window _popupWindow;
-    private LineEdit _popupNameLineEdit;
-    private SpinBox _popupTargetValueSpinBox;
-    private VBoxContainer _portionsContainer;
-    private HBoxContainer _listButtonsContainer;
-
+public partial class PortionsSet : Control
+{   
     private struct MovingPortionInfo
     {
         public  Portion PortionToBeMoved = null;
@@ -27,15 +22,32 @@ public partial class PortionsList : Control
         }
 
     }
+    
+    #region Members and signals
     private MovingPortionInfo _movingPortionInfo = new MovingPortionInfo();
+    private Window _popupWindow;
+    private LineEdit _popupNameLineEdit;
+    private SpinBox _popupTargetValueSpinBox;
+    private VBoxContainer _portionsContainer;
+    private PortionsSetRes _portionsSetRes; 
+    public PortionsSetRes PortionsSetRes
+    {
+        get { return _portionsSetRes;}
+        set { _portionsSetRes = value;}
+    }
 
+    [Signal]
+    public delegate void AddPortionEventHandler(Portion portion);
+    
+    #endregion
+    
+    #region Godot func override
     public override void _Ready()
     {
         _popupWindow = GetNode<Window>("%PopupWindow");
         _popupNameLineEdit = GetNode<LineEdit>("%NameLineEdit");
         _popupTargetValueSpinBox = GetNode<SpinBox>("%TargetValueSpinBox");
         _portionsContainer = GetNode<VBoxContainer>("%PortionsContainer");
-        _listButtonsContainer = GetNode<HBoxContainer>("%ListButtonsContainer");
 
         SetPhysicsProcess(false);
     }
@@ -59,7 +71,9 @@ public partial class PortionsList : Control
             return;
         }
     }
+    #endregion
 
+    #region Private methods
     private bool _CheckPortionMovedUp(Portion portion)
     {
         int index = portion.GetIndex();
@@ -90,40 +104,68 @@ public partial class PortionsList : Control
 
         portion.MoveButtonChanged += OnPortionMoveButtonChanged;
         // portion.PortionNameChanged += OnPortionNameChanged;
-        portion.Init(portionRes);
-        Globals.SetsData.AddPortion(portionRes.PortionName, portion);
+        portion.Init(_portionsSetRes.SetName, portionRes);
+        EmitSignal(SignalName.AddPortion, portion);
 
         _portionsContainer.AddChild(portion);
-        _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
         GetTree().CallGroup(
             "portions",
 			Portion.MethodName.AddSelectionCheckBox,
 			new Variant[] { portionRes.PortionName }
         );
     }
-
+    #endregion
     
-    public void LoadPortions(PortionsSetRes portionsSetRes)
+    #region Public methods
+    // public void Init(PortionsSetRes res)
+    // {
+    //     _portionsSetRes = res;
+        
+    //     foreach(PortionRes portionRes in _portionsSetRes.PortionsResList)
+    //     {
+    //         Portion portion = Globals.PackedScenes.Portion.Instantiate<Portion>();
+    //         portion.MoveButtonChanged += OnPortionMoveButtonChanged;
+    //         // portion.PortionNameChanged += OnPortionNameChanged;
+
+    //         portion.Init(_portionsSetRes.SetName, portionRes);
+    //         _portionsContainer.AddChild(portion);
+    //         EmitSignal(SignalName.AddPortion, portion);
+    //     }
+    // }
+    public void InitFromDict(string setName)
     {
-        foreach(PortionRes portionRes in portionsSetRes.PortionsResList)
+        _portionsSetRes = Globals.SetsData.PortionsSetResDict[setName];
+        
+        foreach(Portion portion in Globals.SetsData.GetPortions(_portionsSetRes.SetName))
         {
-            Portion portion = Globals.PackedScenes.Portion.Instantiate<Portion>();
             portion.MoveButtonChanged += OnPortionMoveButtonChanged;
             // portion.PortionNameChanged += OnPortionNameChanged;
 
-            portion.Init(portionRes);
-            Globals.SetsData.AddPortion(portionRes.PortionName, portion);
-        }
-
-        foreach(Portion portion in Globals.SetsData.PortionsDict.Values)
-        {
+            portion.Init(_portionsSetRes.SetName, portion.Info);
             _portionsContainer.AddChild(portion);
         }
-        
-        _portionsContainer.MoveChild(_listButtonsContainer, _portionsContainer.GetChildCount() - 1);
     }
-    
-    
+    public void Clear()
+    {
+        _portionsSetRes = null;
+        
+        foreach (Portion portion in _portionsContainer.GetChildren())
+            _portionsContainer.RemoveChild(portion);
+    }
+    public void UpdateSetName(string setName)
+    {
+        string oldSetName = _portionsSetRes.SetName;
+        _portionsSetRes.SetName = setName;
+        foreach(Portion portion in Globals.SetsData.GetPortions(_portionsSetRes.SetName))
+        {
+            portion.SetName = setName;
+            portion.RemoveFromGroup($"portions_{oldSetName}");
+            portion.AddToGroup($"portions_{setName}");
+        }
+    }
+    #endregion
+
+    #region Response to signals
     public void _on_add_portion_button_button_down()
     {
         _popupWindow.Show();
@@ -140,16 +182,16 @@ public partial class PortionsList : Control
     }
     public void _on_delete_all_portion_button_button_down()
     {
-        foreach(Portion portion in Globals.SetsData.PortionsDict.Values)
+        foreach(Portion portion in Globals.SetsData.GetPortions(_portionsSetRes.SetName))
         {
             _portionsContainer.RemoveChild(portion);
-            Globals.SetsData.RemovePortion(portion.Info.PortionName);
+            Globals.SetsData.RemovePortion(_portionsSetRes.SetName, portion.Info.PortionName, portion);
             portion.QueueFree();
         }   
     }
     public void _on_reset_all_portion_button_button_down()
     {
-        foreach(Portion portion in Globals.SetsData.PortionsDict.Values)
+        foreach(Portion portion in Globals.SetsData.GetPortions(_portionsSetRes.SetName))
         {
             portion.SubstractValueToProgressBar(portion.Info.IntrisicValue);
             portion.Info.IntrisicValue = 0;
@@ -174,5 +216,5 @@ public partial class PortionsList : Control
     // {
         
     // }
-
+    #endregion
 }

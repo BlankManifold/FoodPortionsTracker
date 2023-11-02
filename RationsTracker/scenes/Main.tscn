@@ -184,6 +184,7 @@ text = "Back"
 
 [connection signal="tree_exiting" from="." to="." method="_on_tree_exiting"]
 [connection signal="button_down" from="MainMarginContainer/MainContainer/SetButtonContainer/AddSetButton" to="." method="_on_add_set_button_button_down"]
+[connection signal="button_down" from="MainMarginContainer/MainContainer/SetButtonContainer/RemoveSetButton" to="." method="_on_remove_set_button_button_down"]
 [connection signal="button_down" from="MainMarginContainer/MainContainer/ChangeSetContainer/PreviousSetButton" to="." method="_on_previous_set_button_button_down"]
 [connection signal="text_submitted" from="MainMarginContainer/MainContainer/ChangeSetContainer/SetNameLineEdit" to="." method="_on_set_name_line_edit_text_submitted"]
 [connection signal="button_down" from="MainMarginContainer/MainContainer/ChangeSetContainer/NextSetButton" to="." method="_on_next_set_button_button_down"]

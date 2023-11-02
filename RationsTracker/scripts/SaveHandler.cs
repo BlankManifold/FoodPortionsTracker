@@ -21,7 +21,7 @@ namespace Handlers
 					{
 						int startIndex = fileName.IndexOf('_') + 1;
 						int endIndex = fileName.LastIndexOf('.');
-						string setName = fileName.Substring(startIndex, endIndex - startIndex);
+						string setName = fileName.Substring(startIndex, endIndex - startIndex).Replace("_", " ");
 						return setName;
 					}
 				)
@@ -29,19 +29,40 @@ namespace Handlers
 		}
 		static public void SaveSet(PortionsSetRes portionsSetRes)
 		{
-			string file_path = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{portionsSetRes.SetName}.tres");
-			ResourceSaver.Save(portionsSetRes, file_path);
+			string fileName = portionsSetRes.SetName.Replace(" ", "_");
+			string filePath = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{fileName}.tres");
+			ResourceSaver.Save(portionsSetRes, filePath);
 		}
 		static public PortionsSetRes LoadSet(string name)
 		{
-			string file_path = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{name}.tres");
-			if (!ResourceLoader.Exists(file_path))
+			string fileName = name.Replace(" ", "_");
+			string filePath = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{fileName}.tres");
+			if (!ResourceLoader.Exists(filePath))
 			{
 				return null;
 			}
 
-			PortionsSetRes portionsSetRes = (PortionsSetRes)ResourceLoader.Load(file_path, cacheMode: ResourceLoader.CacheMode.Ignore);
+			PortionsSetRes portionsSetRes = (PortionsSetRes)ResourceLoader.Load(filePath, cacheMode: ResourceLoader.CacheMode.Ignore);
 			return portionsSetRes;
+		}
+		static public void RemoveSet(string name)
+		{
+			string filePath = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{name}.tres");
+			if (!ResourceLoader.Exists(filePath))
+				return;
+			
+			DirAccess.RemoveAbsolute(filePath);				
+		}
+		static public void ChangeSetName(string oldName, string newName)
+		{	
+			string oldFileName = oldName.Replace(" ", "_");
+			string oldFilePath = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{oldFileName}.tres");
+			if (!ResourceLoader.Exists(oldFilePath))
+				return;
+			
+			string newFileName = newName.Replace(" ", "_");
+			string newFilePath = System.IO.Path.Combine(Globals.Paths.SaveSetsPlot, $"set_{newFileName}.tres");
+			DirAccess.RenameAbsolute(oldFilePath,newFilePath);				
 		}
 		static public ConfigFile LoadMainConfig()
 		{

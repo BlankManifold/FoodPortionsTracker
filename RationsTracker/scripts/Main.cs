@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Linq;
 
 public partial class Main : Node
@@ -44,7 +45,7 @@ public partial class Main : Node
         if (_setsNameList.Count == 1)
             return;
 
-        _currentSetIndex = index % _setsNameList.Count;
+        _currentSetIndex = Mathf.PosMod(index, _setsNameList.Count);
 
         string nextSetName = _setsNameList[_currentSetIndex];
         PortionsSetRes portionsSetRes = Handlers.SaveLoadHandler.LoadSet(nextSetName);
@@ -70,8 +71,14 @@ public partial class Main : Node
     }
     public void _on_set_name_line_edit_text_submitted(string setName)
     {
+        string  oldSetName = _setsNameList[_currentSetIndex];
+        if (oldSetName == setName)
+            return;
+
+        Globals.SetsData.ChangeSetName(setName, oldSetName);
         _setsNameList[_currentSetIndex] = setName;
         _portionsSet.UpdateSetName(setName);
+        _setNameLineEdit.ReleaseFocus();
     }
     public void _on_previous_set_button_button_down()
     {
@@ -82,9 +89,20 @@ public partial class Main : Node
     {
         _addNewSetWindow.Visible = true;
     }
+    public void _on_remove_set_button_button_down()
+    {
+        if (_setsNameList.Count > 1)
+        {
+            string setNameToBeRemoved = _setsNameList[_currentSetIndex];
+            Globals.SetsData.RemoveSet(setNameToBeRemoved);
+            _setsNameList.Remove(setNameToBeRemoved);
+
+            ChangeCurrentSet(_currentSetIndex);
+        }
+    }
     public void _on_confirm_button_button_down()
     {
-        Handlers.SaveLoadHandler.SaveSet(Globals.SetsData.PortionsSetResDict[_setsNameList[_currentSetIndex]]);
+        // Handlers.SaveLoadHandler.SaveSet(Globals.SetsData.PortionsSetResDict[_setsNameList[_currentSetIndex]]);
         string newSetName = _addNewSetLineEdit.Text;
         
         _setNameLineEdit.Text = newSetName;

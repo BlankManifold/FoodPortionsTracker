@@ -1,4 +1,5 @@
 using Godot;
+using Handlers;
 
 namespace Globals
 {
@@ -44,6 +45,7 @@ namespace Globals
             PortionsDict.Remove(setName);
             PortionsTypesDict.Remove(setName);
             PortionsSetResDict.Remove(setName);
+            SaveLoadHandler.RemoveSet(setName);
         }
         public static void AddPortion(string setName, string type, Portion portion)
         {
@@ -72,6 +74,11 @@ namespace Globals
             
             PortionsTypesDict[newSetName] = PortionsTypesDict[oldSetName];
             PortionsTypesDict.Remove(oldSetName); 
+            
+            PortionsSetResDict[newSetName] = PortionsSetResDict[oldSetName];
+            PortionsSetResDict.Remove(oldSetName); 
+
+            SaveLoadHandler.ChangeSetName(oldSetName, newSetName);
         }
         public static bool ContainsPortionType(string setName, string type)
         {

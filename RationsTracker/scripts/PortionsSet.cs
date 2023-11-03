@@ -59,14 +59,14 @@ public partial class PortionsSet : Control
         if (_CheckPortionMovedUp(_movingPortionInfo.PortionToBeMoved))
         {
             int index = _movingPortionInfo.PortionToBeMoved.GetIndex();
-            _movingPortionInfo.YOnRelease = newY;
+            _movingPortionInfo.YOnRelease = _portionsContainer.GetChild<Portion>(index-1).GlobalPosition.Y;
             _portionsContainer.MoveChild(_movingPortionInfo.PortionToBeMoved, index-1);
             return;
         }
         if (_CheckPortionMovedDown(_movingPortionInfo.PortionToBeMoved))
         {
             int index = _movingPortionInfo.PortionToBeMoved.GetIndex();
-            _movingPortionInfo.YOnRelease = newY;
+            _movingPortionInfo.YOnRelease = _portionsContainer.GetChild<Portion>(index+1).GlobalPosition.Y;
             _portionsContainer.MoveChild(_movingPortionInfo.PortionToBeMoved, index+1);
             return;
         }
@@ -77,7 +77,7 @@ public partial class PortionsSet : Control
     private bool _CheckPortionMovedUp(Portion portion)
     {
         int index = portion.GetIndex();
-        if (index == 0 || _portionsContainer.GetChildCount()<=2)
+        if (index == 0 || _portionsContainer.GetChildCount()<2)
             return false;
 
         float previousY = _portionsContainer.GetChild<Portion>(index-1).GlobalPosition.Y;
@@ -86,7 +86,7 @@ public partial class PortionsSet : Control
     private bool _CheckPortionMovedDown(Portion portion)
     {
         int index = portion.GetIndex();
-        if (index == _portionsContainer.GetChildCount()-2 || _portionsContainer.GetChildCount()<=2)
+        if (index == _portionsContainer.GetChildCount()-1 || _portionsContainer.GetChildCount()<2)
             return false;
 
         float nextY = _portionsContainer.GetChild<Portion>(index+1).GlobalPosition.Y;
@@ -201,16 +201,16 @@ public partial class PortionsSet : Control
     {
         if (down)
         {
+            SetPhysicsProcess(true);
             _movingPortionInfo.PortionToBeMoved = portion;
             _movingPortionInfo.YShift = GetGlobalMousePosition().Y - portion.GlobalPosition.Y;
             _movingPortionInfo.YOnRelease = portion.GlobalPosition.Y;
-            SetPhysicsProcess(true);
             return;
         }
 
+        SetPhysicsProcess(false);
         _movingPortionInfo.SnapPosition();
         _movingPortionInfo.PortionToBeMoved = null;
-        SetPhysicsProcess(false);
     }
     // public void OnPortionNameChanged(string newName)
     // {

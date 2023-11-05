@@ -58,7 +58,6 @@ namespace Globals
             PortionsDict[setName].Remove(type);
             PortionsTypesDict[setName].Remove(type);
             PortionsSetResDict[setName].PortionsResList.Remove(portion.Info);
-
         }
         public static void ChangePortionName(string setName, string newType, string oldType)
         {

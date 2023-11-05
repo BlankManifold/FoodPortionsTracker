@@ -3,6 +3,8 @@ using Godot;
 public partial class PortionsSetRes : Resource
 {
     [Export] public string SetName;
+    [Export] public int PeriodScaleIndex;
+    [Export] public int ResetDayIndex;
     
     // Period (daily, weekly,...)
     //[Export] public ;
@@ -12,6 +14,8 @@ public partial class PortionsSetRes : Resource
     public PortionsSetRes() 
     {  
         SetName = ""; 
+        PeriodScaleIndex = 0; 
+        ResetDayIndex = 0; 
         PortionsResList = new Godot.Collections.Array<PortionRes> {};  
     }
 
